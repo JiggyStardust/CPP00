@@ -1,35 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   megaphone.cpp                                      :+:      :+:    :+:   */
+/*   cpp00.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 09:22:21 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/18 09:59:27 by sniemela         ###   ########.fr       */
+/*   Created: 2025/03/18 09:22:45 by sniemela          #+#    #+#             */
+/*   Updated: 2025/03/18 09:45:07 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cpp00.h"
+#ifndef CPP00_H
+# define CPP00_H
 
-int	main(int ac, char **av)
-{
-	if (ac == 1)
-	{
-		std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *\n";
-		return (0);
-	}
-	int i = 1;
-	while (i < ac)
-	{
-		int j = 0;
-		while (av[i][j])
-		{
-			std::cout << (char)std::toupper(av[i][j]);
-			j++;
-		}
-		i++;
-	}
-	std::cout << "\n";
-	return (0);
-}
+# include <cctype>
+# include <iostream>
+
+#endif
