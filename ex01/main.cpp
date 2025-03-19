@@ -6,7 +6,7 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/18 14:53:07 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:31:36 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,23 @@ class PhoneBook
 	public:
     	PhoneBook() noexcept;
 		void addContact();
-		// void searchContacts();
+		void searchContacts();
 };
+
+std::string Contact::getInfo(int type)
+{
+	if (type == FIRSTNAME)
+		return FirstName;
+	else if (type == LASTNAME)
+		return LastName;
+	else if (type == NICKNAME)
+		return NickName;
+	else if (type == NUMBER)
+		return PhoneNumber;
+	else if (type == SECRET)
+		return DarkestSecret;
+	return ""; // If they ask for something that isn't there?
+}
 
 void	Contact::setInfo(std::string info, int type)
 {
@@ -65,21 +80,6 @@ void	Contact::setInfo(std::string info, int type)
 		DarkestSecret = info;
 }
 
-std::string Contact::getInfo(int type)
-{
-	if (type == FIRSTNAME)
-		return FirstName;
-	else if (type == LASTNAME)
-		return LastName;
-	else if (type == NICKNAME)
-		return NickName;
-	else if (type == NUMBER)
-		return PhoneNumber;
-	else if (type == SECRET)
-		return DarkestSecret;
-	return ""; // If they ask for something that isn't there?
-}
-
 void	inputToContact(Contact &contact, int type)
 {
 	std::string input;
@@ -87,8 +87,74 @@ void	inputToContact(Contact &contact, int type)
 	contact.setInfo(input, type);
 }
 
-PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {}
- // this is the constructor, no destructor if no new (malloc)?
+PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {} // this is the constructor, no destructor if no new (malloc)?
+
+std::string truncOrAppend(std::string detail)
+{
+	if (detail.length() > 10)
+		detail = detail.substr(0, 9) + ".";
+	while (detail.length() < 10)
+		detail = detail + " ";
+	return (detail);
+}
+
+void	previewContact(Contact currContact, int index)
+{
+	std::string first;
+	std::string last;
+	std::string nick;
+
+	first = currContact.getInfo(FIRSTNAME);
+	last = currContact.getInfo(LASTNAME);
+	nick = currContact.getInfo(NICKNAME);
+
+	first = truncOrAppend(first);
+	last = truncOrAppend(last);
+	nick = truncOrAppend(nick);
+	std::cout << "|     " << index << "    |" \
+	<< first << "|" << last << "|" << nick << "|" << std::endl;
+}
+
+void	displayContact(Contact currContact)
+{
+	std::string first;
+	std::string last;
+	std::string nick;
+	std::string number;
+	std::string secret;
+
+	first = currContact.getInfo(FIRSTNAME);
+	last = currContact.getInfo(LASTNAME);
+	nick = currContact.getInfo(NICKNAME);
+	number = currContact.getInfo(NUMBER);
+	secret = currContact.getInfo(SECRET);
+
+	std::cout << first << "\n" << last << "\n" << nick << "\n" << number << "\n" \
+	<< secret << std::endl;
+}
+
+#include <type_traits> // for streamsize
+#include <limits>
+
+void	PhoneBook::searchContacts(void)
+{
+	int index;
+	std::cout << "|   INDEX  |FIRST NAME| LAST NAME| NICK NAME|\n";
+	for (int i = 0; i < contactCount; i++)
+		previewContact(contacts[i], i);
+	while (true)
+	{
+		std::cout << "\n\nSet the index of the desired contact\nIndex: ";
+		std::cin >> index;
+		if (std::cin.fail()) // if input is not int
+			std::cin.clear(); // clear error flag (from stream?)
+		else if (index >= 0 && index < contactCount)
+			break ;
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+		std::cout << "\nNot a valid index, try again.";
+	}
+	displayContact(contacts[index]);
+}
 
 void	PhoneBook::addContact(void)
 {
@@ -123,7 +189,6 @@ void	PhoneBook::addContact(void)
 	if (contactCount < 8)
 		contactCount++;
 	nextIndex = (nextIndex + 1) % 8;
-	
 }
 
 int	main(void)
@@ -138,6 +203,8 @@ int	main(void)
 		std::cin.ignore(); // discard newline
 		if (prompt.compare("ADD") == 0)
 			phonebook.addContact();
+		else if (prompt.compare("SEARCH") == 0)
+			phonebook.searchContacts();
 		else if (prompt.compare("EXIT") == 0)
 			break ;
 		else
@@ -145,9 +212,6 @@ int	main(void)
 	}
 	return (0);
 }
-
-
-
 
 // • ADD: save a new contact
 // ◦ If the user enters this command, they are prompted to input the information
