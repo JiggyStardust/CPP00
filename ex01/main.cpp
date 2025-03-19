@@ -6,7 +6,7 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/19 12:31:36 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:30:37 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ void	inputToContact(Contact &contact, int type)
 {
 	std::string input;
 	std::getline(std::cin, input);
+	if (std::cin.eof())
+		throw std::runtime_error("User canceled contact's detail setup.\n");
 	contact.setInfo(input, type);
 }
 
@@ -146,11 +148,13 @@ void	PhoneBook::searchContacts(void)
 	{
 		std::cout << "\n\nSet the index of the desired contact\nIndex: ";
 		std::cin >> index;
-		if (std::cin.fail()) // if input is not int
+		if (std::cin.eof())
+			return ;
+		else if (std::cin.fail()) // if input is not int
 			std::cin.clear(); // clear error flag (from stream?)
 		else if (index >= 0 && index < contactCount)
 			break ;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // try without this just with clear.
 		std::cout << "\nNot a valid index, try again.";
 	}
 	displayContact(contacts[index]);
@@ -181,7 +185,10 @@ void	PhoneBook::addContact(void)
 		catch (const std::exception& error)
 		{
 			std::cout << "Error: " << error.what() << "\n";
-			continue ;
+			if (std::string(error.what()) != "User canceled contact's detail setup.\n")
+				continue ;
+			else
+				return ;
 		}
 		break ;
 	}
@@ -201,7 +208,9 @@ int	main(void)
 		std::cout << "ADD, SEARCH or EXIT?\n\nAction: ";
 		std::cin >> prompt;
 		std::cin.ignore(); // discard newline
-		if (prompt.compare("ADD") == 0)
+		if (std::cin.eof()) // see if infile buffer contains eof
+			break ;
+		else if (prompt.compare("ADD") == 0)
 			phonebook.addContact();
 		else if (prompt.compare("SEARCH") == 0)
 			phonebook.searchContacts();
