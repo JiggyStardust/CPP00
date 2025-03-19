@@ -6,41 +6,13 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/19 16:30:37 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:10:22 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cpp01.h"
+#include "cpp01.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <string>
-
-class Contact
-{
-	private:
-		std::string FirstName;
-		std::string LastName;
-		std::string NickName;
-		std::string PhoneNumber;
-		std::string DarkestSecret;
-	public:
-		void setInfo(std::string info, int type);
-		std::string getInfo(int type);
-};
-
-class PhoneBook
-{
-	private:
-		Contact	contacts[8];
-		int	contactCount;
-		int	nextIndex;
-
-	public:
-    	PhoneBook() noexcept;
-		void addContact();
-		void searchContacts();
-};
+PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {} // this is the constructor, no destructor if no new (malloc)?
 
 std::string Contact::getInfo(int type)
 {
@@ -89,7 +61,6 @@ void	inputToContact(Contact &contact, int type)
 	contact.setInfo(input, type);
 }
 
-PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {} // this is the constructor, no destructor if no new (malloc)?
 
 std::string truncOrAppend(std::string detail)
 {
@@ -134,9 +105,6 @@ void	displayContact(Contact currContact)
 	std::cout << first << "\n" << last << "\n" << nick << "\n" << number << "\n" \
 	<< secret << std::endl;
 }
-
-#include <type_traits> // for streamsize
-#include <limits>
 
 void	PhoneBook::searchContacts(void)
 {
