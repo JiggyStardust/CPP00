@@ -6,7 +6,7 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 08:57:31 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:19:03 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	inputToContact(Contact &contact, int type)
 	std::string input;
 	std::getline(std::cin, input);
 	if (std::cin.eof())
-		throw std::runtime_error("User canceled contact's detail setup.\n");
+		throw std::runtime_error("User canceled contact's detail setup.\n"); // test with just throw""
 	contact.setInfo(input, type);
 }
 
@@ -134,11 +134,11 @@ void	phoneBook::searchContacts(void)
 		std::cin >> index;
 		if (std::cin.eof())
 			return ;
-		else if (std::cin.fail()) // if input is not int
-			std::cin.clear(); // clear error flag (from stream?)
+		else if (std::cin.fail())
+			std::cin.clear();
 		else if (index >= 0 && index < contactCount)
 			break ;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // try without this just with clear.
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // doesn't work without, how does it work
 		std::cout << "\nNot a valid index, try again.";
 	}
 	displayContact(contacts[index]);
@@ -188,15 +188,15 @@ int	main(void)
 	std::string	prompt;
 	while (true)
 	{
-		std::cout << "\n\nADD, SEARCH or EXIT?\n\nAction: ";
-		std::cin >> prompt;
-		std::cin.ignore();
 		if (std::cin.eof())
 		{
 			std::cout << "User canceled program.\n" << std::endl;
 			break ;
 		}
-		else if (prompt.compare("ADD") == 0)
+		std::cout << "\n\nADD, SEARCH or EXIT?\n\nAction: ";
+		std::cin >> prompt;
+		std::cin.ignore();
+		if (prompt.compare("ADD") == 0)
 			phonebook.addContact();
 		else if (prompt.compare("SEARCH") == 0)
 			phonebook.searchContacts();
