@@ -6,7 +6,7 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 09:19:03 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:21:04 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,51 +27,6 @@ std::string Contact::getInfo(int type)
 	else
 		return darkestSecret;
 }
-
-int		strIsSpace(std::string str)
-{
-	size_t i = 0;
-	while (i < str.length())
-	{
-		if (!std::isspace(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-void	Contact::setInfo(std::string info, int type)
-{
-	if (info.empty() || strIsSpace(info))
-		throw std::runtime_error("No field in a contact should be left empty.");
-	if (type == FIRSTNAME)
-		firstName = info;
-	else if (type == LASTNAME)
-		lastName = info;
-	else if (type == NICKNAME)
-		nickName = info;
-	else if (type == NUMBER)
-	{
-		for (size_t i = 0; i < info.length(); i++)
-		{
-			if (!std::isdigit(info[i]))
-				throw std::runtime_error("Phone number should only hold digits.");
-		}
-		phoneNumber = info;
-	}
-	else if (type == SECRET)
-		darkestSecret = info;
-}
-
-void	inputToContact(Contact &contact, int type)
-{
-	std::string input;
-	std::getline(std::cin, input);
-	if (std::cin.eof())
-		throw std::runtime_error("User canceled contact's detail setup.\n"); // test with just throw""
-	contact.setInfo(input, type);
-}
-
 
 std::string truncOrAppend(std::string detail)
 {
@@ -142,6 +97,50 @@ void	phoneBook::searchContacts(void)
 		std::cout << "\nNot a valid index, try again.";
 	}
 	displayContact(contacts[index]);
+}
+
+int		strIsSpace(std::string str)
+{
+	size_t i = 0;
+	while (i < str.length())
+	{
+		if (!std::isspace(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	Contact::setInfo(std::string info, int type)
+{
+	if (info.empty() || strIsSpace(info))
+		throw std::runtime_error("No field in a contact should be left empty.");
+	if (type == FIRSTNAME)
+		firstName = info;
+	else if (type == LASTNAME)
+		lastName = info;
+	else if (type == NICKNAME)
+		nickName = info;
+	else if (type == NUMBER)
+	{
+		for (size_t i = 0; i < info.length(); i++)
+		{
+			if (!std::isdigit(info[i]))
+				throw std::runtime_error("Phone number should only hold digits.");
+		}
+		phoneNumber = info;
+	}
+	else if (type == SECRET)
+		darkestSecret = info;
+}
+
+void	inputToContact(Contact &contact, int type)
+{
+	std::string input;
+	std::getline(std::cin, input);
+	if (std::cin.eof())
+		throw std::runtime_error("User canceled contact's detail setup.\n"); // test with just throw""
+	contact.setInfo(input, type);
 }
 
 void	phoneBook::addContact(void)
