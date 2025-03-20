@@ -6,39 +6,50 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/19 17:10:22 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/20 08:57:31 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cpp01.hpp"
 
-PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {} // this is the constructor, no destructor if no new (malloc)?
+phoneBook::phoneBook() noexcept : contactCount(0), nextIndex(0) {}
 
 std::string Contact::getInfo(int type)
 {
 	if (type == FIRSTNAME)
-		return FirstName;
+		return firstName;
 	else if (type == LASTNAME)
-		return LastName;
+		return lastName;
 	else if (type == NICKNAME)
-		return NickName;
+		return nickName;
 	else if (type == NUMBER)
-		return PhoneNumber;
-	else if (type == SECRET)
-		return DarkestSecret;
-	return ""; // If they ask for something that isn't there?
+		return phoneNumber;
+	else
+		return darkestSecret;
+}
+
+int		strIsSpace(std::string str)
+{
+	size_t i = 0;
+	while (i < str.length())
+	{
+		if (!std::isspace(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 void	Contact::setInfo(std::string info, int type)
 {
-	if (info.empty())
+	if (info.empty() || strIsSpace(info))
 		throw std::runtime_error("No field in a contact should be left empty.");
 	if (type == FIRSTNAME)
-		FirstName = info;
+		firstName = info;
 	else if (type == LASTNAME)
-		LastName = info;
+		lastName = info;
 	else if (type == NICKNAME)
-		NickName = info;
+		nickName = info;
 	else if (type == NUMBER)
 	{
 		for (size_t i = 0; i < info.length(); i++)
@@ -46,10 +57,10 @@ void	Contact::setInfo(std::string info, int type)
 			if (!std::isdigit(info[i]))
 				throw std::runtime_error("Phone number should only hold digits.");
 		}
-		PhoneNumber = info;
+		phoneNumber = info;
 	}
 	else if (type == SECRET)
-		DarkestSecret = info;
+		darkestSecret = info;
 }
 
 void	inputToContact(Contact &contact, int type)
@@ -102,13 +113,18 @@ void	displayContact(Contact currContact)
 	number = currContact.getInfo(NUMBER);
 	secret = currContact.getInfo(SECRET);
 
-	std::cout << first << "\n" << last << "\n" << nick << "\n" << number << "\n" \
+	std::cout << "\n\n" << first << "\n" << last << "\n" << nick << "\n" << number << "\n" \
 	<< secret << std::endl;
 }
 
-void	PhoneBook::searchContacts(void)
+void	phoneBook::searchContacts(void)
 {
 	int index;
+	if (contactCount < 1)
+	{
+		std::cout << "\n\nGet some friends first...\nReturning to main menu.\n";
+		return ;
+	}
 	std::cout << "|   INDEX  |FIRST NAME| LAST NAME| NICK NAME|\n";
 	for (int i = 0; i < contactCount; i++)
 		previewContact(contacts[i], i);
@@ -128,7 +144,7 @@ void	PhoneBook::searchContacts(void)
 	displayContact(contacts[index]);
 }
 
-void	PhoneBook::addContact(void)
+void	phoneBook::addContact(void)
 {
 	Contact newContact;
 	while (true)
@@ -168,44 +184,29 @@ void	PhoneBook::addContact(void)
 
 int	main(void)
 {
-	PhoneBook phonebook;
+	phoneBook phonebook;
 	std::string	prompt;
-
 	while (true)
 	{
-		std::cout << "ADD, SEARCH or EXIT?\n\nAction: ";
+		std::cout << "\n\nADD, SEARCH or EXIT?\n\nAction: ";
 		std::cin >> prompt;
-		std::cin.ignore(); // discard newline
-		if (std::cin.eof()) // see if infile buffer contains eof
+		std::cin.ignore();
+		if (std::cin.eof())
+		{
+			std::cout << "User canceled program.\n" << std::endl;
 			break ;
+		}
 		else if (prompt.compare("ADD") == 0)
 			phonebook.addContact();
 		else if (prompt.compare("SEARCH") == 0)
 			phonebook.searchContacts();
 		else if (prompt.compare("EXIT") == 0)
+		{
+			std::cout << "\nGoodbye!\n" << std::endl;
 			break ;
+		}
 		else
-			std::cout << "Sorry, come again?\n";
+			std::cout << "\nSorry, come again?\n";
 	}
 	return (0);
 }
-
-// • ADD: save a new contact
-// ◦ If the user enters this command, they are prompted to input the information
-// of the new contact one field at a time. Once all the fields have been completed,
-// add the contact to the phonebook.
-// ◦ The contact fields are: first name, last name, nickname, phone number, and
-// darkest secret. A saved contact can’t have empty fields.
-
-// • SEARCH: display a specific contact
-// ◦ Display the saved contacts as a list of 4 columns: index, first name, last
-// name and nickname.
-// ◦ Each column must be 10 characters wide. A pipe character (’|’) separates
-// them. The text must be right-aligned. If the text is longer than the column,
-// it must be truncated and the last displayable character must be replaced by a
-// dot (’.’).
-// ◦ Then, prompt the user again for the index of the entry to display. If the index
-// is out of range or wrong, define a relevant behavior. Otherwise, display the
-// contact information, one field per line.
-// • EXIT
-// ◦ The program quits and the contacts are lost forever!

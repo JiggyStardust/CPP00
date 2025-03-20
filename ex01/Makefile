@@ -6,11 +6,11 @@
 #    By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 08:46:19 by sniemela          #+#    #+#              #
-#    Updated: 2025/03/18 13:02:08 by sniemela         ###   ########.fr        #
+#    Updated: 2025/03/20 08:06:56 by sniemela         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = PhoneBook
+NAME = phoneBook
 CPPFLAGS = -Wall -Werror -Wextra
 CPP = c++
 SOURCES = main.cpp 
