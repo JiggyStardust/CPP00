@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpp01.h                                            :+:      :+:    :+:   */
+/*   Contact.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 08:04:19 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 08:06:37 by sniemela         ###   ########.fr       */
+/*   Created: 2025/03/20 15:16:44 by sniemela          #+#    #+#             */
+/*   Updated: 2025/03/20 15:34:12 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CPP_H
-# define CPP_H
+#pragma once
 
-# define FIRSTNAME 0
-# define LASTNAME 1
-# define NICKNAME 2
-# define NUMBER 3
-# define SECRET 4
+#include <string>
+#include <cctype>
+#include <stdexcept>
 
+#define FIRSTNAME 0
+#define LASTNAME 1
+#define NICKNAME 2
+#define NUMBER 3
+#define SECRET 4
 
-# include <cctype>
-# include <iostream>
-# include <string>
-# include <stdexcept>
-# include <fstream>
-# include <type_traits> // for streamsize // is it necessary?
-# include <limits>
-
-#endif
+class Contact
+{
+	private:
+		std::string firstName;
+		std::string lastName;
+		std::string nickName;
+		std::string phoneNumber;
+		std::string darkestSecret;
+	public:
+		void setInfo(std::string info, int type);
+		std::string getInfo(int type);
+};

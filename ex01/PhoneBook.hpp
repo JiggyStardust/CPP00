@@ -1,33 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpp01.hpp                                          :+:      :+:    :+:   */
+/*   PhoneBook.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 09:22:45 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 08:09:26 by sniemela         ###   ########.fr       */
+/*   Created: 2025/03/20 15:15:37 by sniemela          #+#    #+#             */
+/*   Updated: 2025/03/20 15:23:41 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CPP01_HPP
-# define CPP01_HPP
-# include "cpp01.h"
+#pragma once
 
-class Contact
-{
-	private:
-		std::string firstName;
-		std::string lastName;
-		std::string nickName;
-		std::string phoneNumber;
-		std::string darkestSecret;
-	public:
-		void setInfo(std::string info, int type);
-		std::string getInfo(int type);
-};
+#include "Contact.hpp"
 
-class phoneBook
+class PhoneBook
 {
 	private:
 		Contact	contacts[8];
@@ -35,9 +22,7 @@ class phoneBook
 		int	nextIndex;
 
 	public:
-    	phoneBook() noexcept;
+    	PhoneBook() noexcept;
 		void addContact();
 		void searchContacts();
 };
-
-#endif

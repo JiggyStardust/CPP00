@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   PhoneBook.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 09:21:04 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:37:22 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cpp01.hpp"
+#include "PhoneBook.hpp"
 
-phoneBook::phoneBook() noexcept : contactCount(0), nextIndex(0) {}
+# include <cctype> //isspace, isdigit
+# include <iostream> // cout and cin
+# include <string> // for string stuff
+# include <stdexcept> // for throw and catch
+# include <fstream> // getline
+# include <type_traits> // for streamsize // is it necessary?
+# include <limits> // for limits used in cin.ignore
 
-std::string Contact::getInfo(int type)
-{
-	if (type == FIRSTNAME)
-		return firstName;
-	else if (type == LASTNAME)
-		return lastName;
-	else if (type == NICKNAME)
-		return nickName;
-	else if (type == NUMBER)
-		return phoneNumber;
-	else
-		return darkestSecret;
-}
+PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {}
 
 std::string truncOrAppend(std::string detail)
 {
@@ -72,7 +66,7 @@ void	displayContact(Contact currContact)
 	<< secret << std::endl;
 }
 
-void	phoneBook::searchContacts(void)
+void	PhoneBook::searchContacts(void)
 {
 	int index;
 	if (contactCount < 1)
@@ -99,41 +93,6 @@ void	phoneBook::searchContacts(void)
 	displayContact(contacts[index]);
 }
 
-int		strIsSpace(std::string str)
-{
-	size_t i = 0;
-	while (i < str.length())
-	{
-		if (!std::isspace(str[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-void	Contact::setInfo(std::string info, int type)
-{
-	if (info.empty() || strIsSpace(info))
-		throw std::runtime_error("No field in a contact should be left empty.");
-	if (type == FIRSTNAME)
-		firstName = info;
-	else if (type == LASTNAME)
-		lastName = info;
-	else if (type == NICKNAME)
-		nickName = info;
-	else if (type == NUMBER)
-	{
-		for (size_t i = 0; i < info.length(); i++)
-		{
-			if (!std::isdigit(info[i]))
-				throw std::runtime_error("Phone number should only hold digits.");
-		}
-		phoneNumber = info;
-	}
-	else if (type == SECRET)
-		darkestSecret = info;
-}
-
 void	inputToContact(Contact &contact, int type)
 {
 	std::string input;
@@ -143,7 +102,7 @@ void	inputToContact(Contact &contact, int type)
 	contact.setInfo(input, type);
 }
 
-void	phoneBook::addContact(void)
+void	PhoneBook::addContact(void)
 {
 	Contact newContact;
 	while (true)
@@ -183,7 +142,7 @@ void	phoneBook::addContact(void)
 
 int	main(void)
 {
-	phoneBook phonebook;
+	PhoneBook Phonebook;
 	std::string	prompt;
 	while (true)
 	{
@@ -196,9 +155,9 @@ int	main(void)
 		std::cin >> prompt;
 		std::cin.ignore();
 		if (prompt.compare("ADD") == 0)
-			phonebook.addContact();
+			Phonebook.addContact();
 		else if (prompt.compare("SEARCH") == 0)
-			phonebook.searchContacts();
+			Phonebook.searchContacts();
 		else if (prompt.compare("EXIT") == 0)
 		{
 			std::cout << "\nGoodbye!\n" << std::endl;
