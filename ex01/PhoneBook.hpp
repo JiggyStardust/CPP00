@@ -1,19 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpp00.h                                            :+:      :+:    :+:   */
+/*   PhoneBook.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/18 09:22:45 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/18 09:45:07 by sniemela         ###   ########.fr       */
+/*   Created: 2025/03/20 15:15:37 by sniemela          #+#    #+#             */
+/*   Updated: 2025/03/20 15:23:41 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CPP00_H
-# define CPP00_H
+#pragma once
 
-# include <cctype>
-# include <iostream>
+#include "Contact.hpp"
 
-#endif
+class PhoneBook
+{
+	private:
+		Contact	contacts[8];
+		int	contactCount;
+		int	nextIndex;
+
+	public:
+    	PhoneBook() noexcept;
+		void addContact();
+		void searchContacts();
+};

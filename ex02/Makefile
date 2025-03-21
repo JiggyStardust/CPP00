@@ -6,15 +6,15 @@
 #    By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 08:46:19 by sniemela          #+#    #+#              #
-#    Updated: 2025/03/20 15:35:27 by sniemela         ###   ########.fr        #
+#    Updated: 2025/03/20 13:55:19 by sniemela         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = PhoneBook
-CPPFLAGS = -Wall -Werror -Wextra
+NAME = Account
+CPPFLAGS = -Wall -Wextra
 CPP = c++
-SOURCES = Contact.cpp \
-		 PhoneBook.cpp
+SOURCES = Account.cpp \
+		 	tests.cpp
 
 OBJDIR = obj
 OBJS = $(SOURCES:%.cpp=$(OBJDIR)/%.o)
@@ -40,4 +40,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
-

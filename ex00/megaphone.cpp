@@ -6,11 +6,12 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 09:22:21 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/18 09:59:27 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:21:59 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cpp00.h"
+# include <cctype>
+# include <iostream>
 
 int	main(int ac, char **av)
 {
