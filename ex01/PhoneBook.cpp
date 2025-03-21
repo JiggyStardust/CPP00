@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   PhoneBook.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: saaraniemela <saaraniemela@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 15:37:22 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/21 12:43:45 by saaraniemel      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
-
-# include <cctype> //isspace, isdigit
-# include <iostream> // cout and cin
-# include <string> // for string stuff
-# include <stdexcept> // for throw and catch
-# include <fstream> // getline
-# include <type_traits> // for streamsize // is it necessary?
-# include <limits> // for limits used in cin.ignore
 
 PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {}
 
@@ -77,7 +69,7 @@ void	PhoneBook::searchContacts(void)
 	std::cout << "|   INDEX  |FIRST NAME| LAST NAME| NICK NAME|\n";
 	for (int i = 0; i < contactCount; i++)
 		previewContact(contacts[i], i);
-	while (true)
+	for (int tries = 1; tries <= 3; tries++)
 	{
 		std::cout << "\n\nSet the index of the desired contact\nIndex: ";
 		std::cin >> index;
@@ -87,7 +79,12 @@ void	PhoneBook::searchContacts(void)
 			std::cin.clear();
 		else if (index >= 0 && index < contactCount)
 			break ;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // doesn't work without, how does it work
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		if (tries == 3)
+		{
+			std::cout << "\n- - - - Too many attempts, returning to main menu. - - - -";
+			return ;
+		}
 		std::cout << "\nNot a valid index, try again.";
 	}
 	displayContact(contacts[index]);
@@ -97,8 +94,8 @@ void	inputToContact(Contact &contact, int type)
 {
 	std::string input;
 	std::getline(std::cin, input);
-	if (std::cin.eof())
-		throw std::runtime_error("User canceled contact's detail setup.\n"); // test with just throw""
+	if (std::cin.eof() || input == "CANCEL")
+		throw std::runtime_error("User canceled contact's detail setup.\n");
 	contact.setInfo(input, type);
 }
 
@@ -160,7 +157,7 @@ int	main(void)
 			Phonebook.searchContacts();
 		else if (prompt.compare("EXIT") == 0)
 		{
-			std::cout << "\nGoodbye!\n" << std::endl;
+			std::cout << "\n- - - - - - - - - - - - Goodbye! - - - - - - - - - - -\n" << std::endl;
 			break ;
 		}
 		else
