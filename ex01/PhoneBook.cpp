@@ -6,29 +6,19 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 10:24:06 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 15:37:22 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/22 16:35:39 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PhoneBook.hpp"
 
-# include <cctype> //isspace, isdigit
-# include <iostream> // cout and cin
-# include <string> // for string stuff
-# include <stdexcept> // for throw and catch
-# include <fstream> // getline
-# include <type_traits> // for streamsize // is it necessary?
-# include <limits> // for limits used in cin.ignore
+PhoneBook::PhoneBook() noexcept : ContactCount(0), Index(0) {}
 
-PhoneBook::PhoneBook() noexcept : contactCount(0), nextIndex(0) {}
-
-std::string truncOrAppend(std::string detail)
+std::string trunc(const std::string &detail)
 {
-	if (detail.length() > 10)
-		detail = detail.substr(0, 9) + ".";
-	while (detail.length() < 10)
-		detail = detail + " ";
-	return (detail);
+    if (detail.length() > 10)
+        return detail.substr(0, 9) + ".";  // Directly return modified string
+    return detail;  // No need for reassignment
 }
 
 void	previewContact(Contact currContact, int index)
@@ -41,11 +31,11 @@ void	previewContact(Contact currContact, int index)
 	last = currContact.getInfo(LASTNAME);
 	nick = currContact.getInfo(NICKNAME);
 
-	first = truncOrAppend(first);
-	last = truncOrAppend(last);
-	nick = truncOrAppend(nick);
-	std::cout << "|     " << index << "    |" \
-	<< first << "|" << last << "|" << nick << "|" << std::endl;
+	first = trunc(first);
+	last = trunc(last);
+	nick = trunc(nick);
+	std::cout << "|" << std::setw(10) << index << "|" << std::setw(10) << first \
+	<< "|" << std::setw(10) << last << "|" << std::setw(10) << nick << "|" << std::endl;
 }
 
 void	displayContact(Contact currContact)
@@ -62,22 +52,24 @@ void	displayContact(Contact currContact)
 	number = currContact.getInfo(NUMBER);
 	secret = currContact.getInfo(SECRET);
 
-	std::cout << "\n\n" << first << "\n" << last << "\n" << nick << "\n" << number << "\n" \
+	std::cout << std::setfill('_') << std::setw(45) << "\n" << first << "\n" << last << "\n" << nick << "\n" << number << "\n" \
 	<< secret << std::endl;
 }
 
 void	PhoneBook::searchContacts(void)
 {
 	int index;
-	if (contactCount < 1)
+	if (ContactCount < 1)
 	{
 		std::cout << "\n\nGet some friends first...\nReturning to main menu.\n";
 		return ;
 	}
-	std::cout << "|   INDEX  |FIRST NAME| LAST NAME| NICK NAME|\n";
-	for (int i = 0; i < contactCount; i++)
-		previewContact(contacts[i], i);
-	while (true)
+	std::cout << "|" << std::setw(10) << "INDEX" << "|" << std::setw(10) << "FIRST NAME" \
+	<< "|" << std::setw(10) << "LAST NAME" << "|" << std::setw(10) << "NICK NAME" << "|" << std::endl;
+
+	for (int i = 0; i < ContactCount; i++)
+		previewContact(Contacts[i], i);
+	for (int tries = 1; tries <= 3; tries++)
 	{
 		std::cout << "\n\nSet the index of the desired contact\nIndex: ";
 		std::cin >> index;
@@ -85,20 +77,25 @@ void	PhoneBook::searchContacts(void)
 			return ;
 		else if (std::cin.fail())
 			std::cin.clear();
-		else if (index >= 0 && index < contactCount)
+		else if (index >= 0 && index < ContactCount)
 			break ;
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // doesn't work without, how does it work
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		if (tries == 3)
+		{
+			std::cout << "\n- - - - Too many attempts, returning to main menu. - - - -";
+			return ;
+		}
 		std::cout << "\nNot a valid index, try again.";
 	}
-	displayContact(contacts[index]);
+	displayContact(Contacts[index]);
 }
 
 void	inputToContact(Contact &contact, int type)
 {
 	std::string input;
 	std::getline(std::cin, input);
-	if (std::cin.eof())
-		throw std::runtime_error("User canceled contact's detail setup.\n"); // test with just throw""
+	if (std::cin.eof() || input == "CANCEL")
+		throw std::runtime_error("User canceled contact's detail setup.\n");
 	contact.setInfo(input, type);
 }
 
@@ -120,7 +117,7 @@ void	PhoneBook::addContact(void)
 
 			std::cout << "Phone number: ";
 			inputToContact(newContact, NUMBER);
-
+			
 			std::cout << "Darkest secret: ";
 			inputToContact(newContact, SECRET);
 		}
@@ -134,10 +131,10 @@ void	PhoneBook::addContact(void)
 		}
 		break ;
 	}
-	contacts[nextIndex] = newContact;
-	if (contactCount < 8)
-		contactCount++;
-	nextIndex = (nextIndex + 1) % 8;
+	Contacts[Index] = newContact;
+	if (ContactCount < 8)
+		ContactCount++;
+	Index = (Index + 1) % 8;
 }
 
 int	main(void)
@@ -154,13 +151,18 @@ int	main(void)
 		std::cout << "\n\nADD, SEARCH or EXIT?\n\nAction: ";
 		std::cin >> prompt;
 		std::cin.ignore();
-		if (prompt.compare("ADD") == 0)
-			Phonebook.addContact();
-		else if (prompt.compare("SEARCH") == 0)
-			Phonebook.searchContacts();
-		else if (prompt.compare("EXIT") == 0)
+		if (std::cin.eof())
 		{
-			std::cout << "\nGoodbye!\n" << std::endl;
+			std::cout << "User canceled program.\n" << std::endl;
+			break ;
+		}
+		if (prompt == "ADD")
+			Phonebook.addContact();
+		else if (prompt == "SEARCH")
+			Phonebook.searchContacts();
+		else if (prompt == "EXIT")
+		{
+			std::cout << "\n- - - - - - - - - - - - Goodbye! - - - - - - - - - - -\n" << std::endl;
 			break ;
 		}
 		else

@@ -6,12 +6,12 @@
 #    By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/18 08:46:19 by sniemela          #+#    #+#              #
-#    Updated: 2025/03/20 13:55:19 by sniemela         ###   ########.fr        #
+#    Updated: 2025/03/22 14:48:34 by sniemela         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = Account
-CPPFLAGS = -Wall -Wextra
+CPPFLAGS = -Wall -Werror -Wextra -std=c++98
 CPP = c++
 SOURCES = Account.cpp \
 		 	tests.cpp

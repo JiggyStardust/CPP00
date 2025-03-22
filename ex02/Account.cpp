@@ -6,7 +6,7 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:05:07 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 15:13:21 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/22 15:01:02 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,6 @@
 
 #include <ctime>
 #include <iostream>
-// #include <cctype>
-
-// int	getNbAccounts( void );
-// int	getTotalAmount( void );
-// int	getNbDeposits( void );
-// int	getNbWithdrawals( void );
 
 int Account::_nbAccounts = 0;
 int	Account::_totalAmount = 0;
@@ -42,6 +36,7 @@ Account::Account( int initial_deposit )
 
 Account::~Account( void )
 {
+	_displayTimestamp();
 	std::cout << "index:" << _accountIndex << ";amount:" << _amount << \
 	";closed" << std::endl;
 }
@@ -60,11 +55,16 @@ void Account::_displayTimestamp( void )
 
 void Account::makeDeposit( int deposit )
 {
+	_nbDeposits++;
+	
 	_displayTimestamp();
 	std::cout << "index:" << _accountIndex << ";p_amount:" << _amount << \
-	";deposit:" << deposit << ";amount:" << _amount + deposit << std::endl;
+	";deposit:" << deposit << ";amount:" << _amount + deposit << ";nb_deposits:" \
+	<< _nbDeposits << std::endl;
+	
 	_amount += deposit;
-	_nbDeposits++;
+	_totalAmount += deposit;
+	_totalNbDeposits++;
 }
 
 bool	Account::makeWithdrawal( int withdrawal )
@@ -83,6 +83,8 @@ bool	Account::makeWithdrawal( int withdrawal )
 		";nb_withdrawals:" << _nbWithdrawals + 1 << std::endl;
 		_amount = balance;
 		_nbWithdrawals++;
+		_totalAmount -= withdrawal;
+		_totalNbWithdrawals++;
 	}
 	return (true);
 }
@@ -105,5 +107,4 @@ void Account::displayAccountsInfos(void)
 	_displayTimestamp();
 	std::cout << "accounts:" << _nbAccounts << ";total:" << _totalAmount << \
 	";deposits:" << _totalNbDeposits << ";withdrawals:" << _totalNbWithdrawals << std::endl;
-
 }

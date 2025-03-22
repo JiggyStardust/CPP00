@@ -6,13 +6,13 @@
 /*   By: sniemela <sniemela@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 15:24:57 by sniemela          #+#    #+#             */
-/*   Updated: 2025/03/20 15:33:40 by sniemela         ###   ########.fr       */
+/*   Updated: 2025/03/22 13:42:51 by sniemela         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Contact.hpp"
 
-int		strIsSpace(std::string str)
+int		isStringSpace(std::string str)
 {
 	size_t i = 0;
 	while (i < str.length())
@@ -40,7 +40,7 @@ std::string Contact::getInfo(int type)
 
 void	Contact::setInfo(std::string info, int type)
 {
-	if (info.empty() || strIsSpace(info))
+	if (info.empty() || isStringSpace(info))
 		throw std::runtime_error("No field in a contact should be left empty.");
 	if (type == FIRSTNAME)
 		firstName = info;
